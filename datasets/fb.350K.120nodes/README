@@ -1,0 +1,42 @@
+This pub/sub workload is compiled based on a subset of Facebook traces provided
+by UCSB CURRENT research group.
+
+The present dataset is designed for a distributed broker-based system in which
+user profiles are hosted by pub/sub separate brokers and each broker subscribes
+to the activities performed by friends of the users that it hosts (on their
+behalf). The dataset parameters are as follows:
+
+  - number of brokers (broker-no): 120
+  - number of users (user-no): 350,000
+  - number of subscriptions (subs-no): 125,612
+  - number of publication (pubs-no): 50,024
+  - number of deliveries: 1.22 million
+
+
+
+The compilation process is as follows:
+
+  - A subset of user-no of unique users has been randomly picked and the social
+    graph (friendships) and interaction graph (wall posts) present in the
+    Facebook traces has been contracted to include these users only.
+
+  - The selected users were assigned uniformly between brokers.
+  
+  - Subscriptions local to each broker were then constructed according to the
+    identifiers of friends of each user assigned to that broker (based on social
+    graph traces).
+
+  - Publications are then constructed based on the interaction graphs such that
+    each publication matches friends of the user who wrote the wall post as well
+    as the friends of the user who received the post.
+
+The number of hosts/users can be configured and the pub/sub dataset be
+recompiled accordingly from the original user traces using our scripts. However,
+due to privacy issues we are unable to distribute original user traces and
+scripts for recompiling the dataset. If you wish access to a new dataset with
+different parameters please contact us with the specifics of your request. We
+try our best to accommodate your requests.
+
+Thanks,
+Reza
+
