@@ -19,7 +19,7 @@ function loader(path) {
 
 function formatter(
   stream,
-  { resizeDataset = true, maxUsers = 100, removeDeleted = true } = {}
+  { resizeDataset = false, maxUsers = 100, removeDeleted = true } = {}
 ) {
   return new Promise((resolve, reject) => {
     let userNum = 0
