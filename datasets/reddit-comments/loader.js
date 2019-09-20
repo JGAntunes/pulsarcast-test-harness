@@ -17,47 +17,70 @@ function loader(path) {
   return pump(file, split(), parser)
 }
 
-function formatter(stream, { removeDeleted = true } = {}) {
+function formatter(
+  stream,
+  { resizeDataset = true, maxUsers = 100, removeDeleted = true } = {}
+) {
   return new Promise((resolve, reject) => {
     let userNum = 0
     let eventNum = 0
     const topics = {}
     const users = {}
+    // Helper index to keep users that exceed number of Nodes
+    const extraUsers = {}
     stream
       .on('data', comment => {
-        if (comment.author === '[deleted]') {
+        let userId = comment.author
+        if (userId === '[deleted]') {
           // Remove deleted user accounts
           if (removeDeleted) return
           // Workaround for deleted users
-          comment.author = `node-${userNum}`
+          userId = `node-${userNum}`
         }
         // Create the topic if it does not exist
         if (!topics[comment.subreddit]) {
           topics[comment.subreddit] = {
             name: comment.subreddit,
-            author: comment.author,
+            author: userId,
             totalNumberEvents: 1
           }
         } else {
           topics[comment.subreddit].totalNumberEvents++
         }
         // Create the user if it does not exist
-        if (!users[comment.author]) {
-          userNum++
-          users[comment.author] = {
-            name: comment.author,
-            node: `node-${userNum}`,
-            events: [],
-            subscriptions: {}
+        if (!users[userId]) {
+          // The number of users exceeds the requested
+          // we'll map to already existing users
+          if (resizeDataset && userNum >= maxUsers) {
+            const userIds = Object.keys(users)
+            const randomAuthor = Math.floor(
+              Math.random() * Math.floor(userIds.length)
+            )
+            extraUsers[userId] = userIds[randomAuthor]
+            userId = userIds[randomAuthor]
+          } else {
+            userNum++
+            users[userId] = {
+              name: userId,
+              node: `node-${userNum}`,
+              events: [],
+              subscriptions: {}
+            }
           }
         }
+
+        // Check if user exceeded the allowed number and is mapped to someone else
+        if (extraUsers[userId]) {
+          userId = extraUsers[userId]
+        }
         // Set user subscriptions
-        users[comment.author].subscriptions[comment.subreddit] = true
+        users[userId].subscriptions[comment.subreddit] = true
 
         // Set use publish messages
-        const { body, ups, downs, controversiality } = comment
-        users[comment.author].events.push({
+        const { body, ups, downs, controversiality, subreddit } = comment
+        users[userId].events.push({
           internalId: eventNum++,
+          topic: subreddit,
           body,
           ups,
           downs,
