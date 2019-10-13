@@ -7,5 +7,4 @@ require('yargs')
   .help('h')
   .alias('h', 'help')
   .completion()
-  .strict()
-  .argv
+  .strict().argv
