@@ -5,7 +5,7 @@
   "scripts": {
     "fmt": "prettier --write '{,!(coverage)/**/}*.js' && eslint --fix .",
     "fmt:ci": "prettier -l '{,!(coverage)/**/}*.js'",
-    "lint": "standard .  | snazzy",
+    "lint": "eslint .",
     "test": "echo \"Such tests, very wow\"",
     "test:ci": "npm run lint && npm test"
   },
@@ -21,9 +21,6 @@
       "git add"
     ]
   },
-  "pre-commit": [
-    "lint"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JGAntunes/pulsarcast-test-harness.git"
@@ -48,7 +45,8 @@
     "binary-split": "^1.0.5",
     "ipfs-testbed": "^0.1.0",
     "pump": "^3.0.0",
-    "through2": "^3.0.1"
+    "through2": "^3.0.1",
+    "yargs": "^14.0.0"
   },
   "devDependencies": {
     "eslint": "^5.11.1",

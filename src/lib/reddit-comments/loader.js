@@ -37,16 +37,7 @@ function formatter(
           // Workaround for deleted users
           userId = `node-${userNum}`
         }
-        // Create the topic if it does not exist
-        if (!topics[comment.subreddit]) {
-          topics[comment.subreddit] = {
-            name: comment.subreddit,
-            author: userId,
-            totalNumberEvents: 1
-          }
-        } else {
-          topics[comment.subreddit].totalNumberEvents++
-        }
+
         // Create the user if it does not exist
         if (!users[userId]) {
           // The number of users exceeds the requested
@@ -67,6 +58,18 @@ function formatter(
               subscriptions: {}
             }
           }
+        }
+
+        // Create the topic if it does not exist
+        if (!topics[comment.subreddit]) {
+          topics[comment.subreddit] = {
+            node: `node-${userNum}`,
+            name: comment.subreddit,
+            author: userId,
+            totalNumberEvents: 1
+          }
+        } else {
+          topics[comment.subreddit].totalNumberEvents++
         }
 
         // Check if user exceeded the allowed number and is mapped to someone else
@@ -94,13 +97,7 @@ function formatter(
   })
 }
 
-function outputToStdout({ users, topics }) {
-  Object.values(users).forEach(user => console.log(JSON.stringify(user)))
-  Object.values(topics).forEach(topic => console.log(JSON.stringify(topic)))
-}
-
 module.exports = {
   loader,
-  formatter,
-  outputToStdout
+  formatter
 }
