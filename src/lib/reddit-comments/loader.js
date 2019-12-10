@@ -63,7 +63,9 @@ function formatter(
         // Create the topic if it does not exist
         if (!topics[comment.subreddit]) {
           topics[comment.subreddit] = {
-            node: `node-${userNum}`,
+            node: `node-${Math.floor(
+              Math.random() * Math.floor(Object.keys(users).length)
+            ) + 1}`,
             name: comment.subreddit,
             author: userId,
             totalNumberEvents: 1
@@ -80,11 +82,10 @@ function formatter(
         users[userId].subscriptions[comment.subreddit] = true
 
         // Set use publish messages
-        const { body, ups, downs, controversiality, subreddit } = comment
+        const { ups, downs, controversiality, subreddit } = comment
         users[userId].events.push({
           internalId: eventNum++,
           topic: subreddit,
-          body,
           ups,
           downs,
           controversiality
