@@ -9,6 +9,9 @@
     "test": "echo \"Such tests, very wow\"",
     "test:ci": "npm run lint && npm test"
   },
+  "bin": {
+    "pulsar-test": "src/bin.js"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged && npm run test"
